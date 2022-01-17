@@ -106,9 +106,6 @@ const seed = (data) => {
     return db.query(insertComment)
 
   })
-  .then((result) => {
-    console.log(result.rows)
-  })
 };
 
 module.exports = seed;

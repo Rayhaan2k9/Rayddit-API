@@ -1,5 +1,6 @@
 const db = require("../connection");
 const allData = require("../data/test-data/index");
+const format = require('pg-format');
 
 const seed = (data) => {
   const { articleData, commentData, topicData, userData } = data;
@@ -30,7 +31,7 @@ const seed = (data) => {
   .then(() => {
     return db.query(`CREATE TABLE articles (
       article_id SERIAL PRIMARY KEY,
-      title VARCHAR(50) NOT NULL,
+      title VARCHAR(200) NOT NULL,
       body TEXT NOT NULL,
       votes INT NOT NULL,
       topic TEXT,
@@ -53,9 +54,61 @@ const seed = (data) => {
     );`)
   })
   .then((result) => {
-   console.log(result)
+    const formattedTopics = topicData.map((topic) => {
+      return [topic.slug, topic.description]
+    })
+    const insertTopics = format(`INSERT INTO topics (
+      slug,
+      description
+    )
+    VALUES %L RETURNING *`, formattedTopics);
+    return db.query(insertTopics)
   })
-  
+  .then(() => {
+    const formattedUsers = userData.map((user) => {
+      return [user.username, user.avatar_url, user.name]
+    })
+    const insertUsers = format(`INSERT INTO users (
+      username,
+      avatar_url,
+      name
+    )
+    VALUES %L RETURNING *`, formattedUsers);
+    return db.query(insertUsers);
+  })
+  .then(() => {
+    const formattedArticles = articleData.map((article) => {
+      return [article.title, article.body,article.votes, article.topic, article.author, article.created_at]
+    })
+    const insertArticles = format(`INSERT INTO articles (
+      title,
+      body,
+      votes,
+      topic,
+      author,
+      created_at
+      )
+      VALUES %L RETURNING *`, formattedArticles);
+      return db.query(insertArticles)
+  })
+  .then(() => {
+    const formattedComments = commentData.map((comment) => {
+      return [comment.author, comment.article_id, comment.votes, comment.created_at, comment.body]
+    })
+    const insertComment = format(`INSERT INTO comments (
+      author,
+      article_id,
+      votes,
+      created_at,
+      body
+    )
+    VALUES %L RETURNING *`, formattedComments);
+    return db.query(insertComment)
+
+  })
+  .then((result) => {
+    console.log(result.rows)
+  })
 };
 
 module.exports = seed;

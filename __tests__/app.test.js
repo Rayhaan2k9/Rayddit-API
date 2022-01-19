@@ -5,6 +5,7 @@ const app = require('../app')
 const request = require('supertest');
 const { response } = require('../app');
 
+
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
@@ -99,7 +100,7 @@ describe('/api/articles/:article_id', () => {
         })
     })
     describe('PATCH: Error handling', () => {
-        test.only('400: Bad request for malformed body/missing required fields', () => {
+        test('400: Bad request for malformed body/missing required fields', () => {
             return request(app)
             .patch('/api/articles/1')
             .send({})
@@ -109,7 +110,7 @@ describe('/api/articles/:article_id', () => {
             })
         })
         
-        test.only('400: Bad request when incorrect data type entered', () => {
+        test('400: Bad request when incorrect data type entered', () => {
             return request(app)
             .patch('/api/articles/1')
             .send({inc_votes: "notANumber"})
@@ -118,6 +119,41 @@ describe('/api/articles/:article_id', () => {
                 expect(res.body.message).toBe('Bad Request')
             })
 
+        })
+    })
+})
+
+describe('/api/articles', () => {
+    describe('GET: Happy Paths', () => {
+        test.only('returns an array of articles', () => {
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeInstanceOf(Array);
+                res.body.articles.forEach((article) => {
+                    expect(article).toMatchObject({
+                        author: expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        body: expect.any(String),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number)
+                    })
+                })
+
+            })
+        })
+
+        test.only('returns an array of articles sorted by a query', () => {
+            return request(app)
+            .get('/api/articles?sort_by=article_id')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSortedBy('article_id')
+            })
         })
     })
 })

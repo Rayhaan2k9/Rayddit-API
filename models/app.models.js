@@ -98,3 +98,11 @@ if(!allowedOrders.includes(order)) {
 }
     
 }
+
+exports.fetchCommentsByArticle = (article_id) => {
+    return db.query(`SELECT comments.comment_id, comments.votes, comments.created_at, users.username AS author, comments.body FROM comments INNER JOIN articles ON comments.article_id = articles.article_id INNER JOIN users ON comments.author = users.username
+    WHERE articles.article_id = $1`, [article_id])
+    .then((result) => {
+        return result.rows
+    })
+}

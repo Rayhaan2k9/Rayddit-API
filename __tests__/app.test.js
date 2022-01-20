@@ -125,7 +125,7 @@ describe('/api/articles/:article_id', () => {
 
 describe('/api/articles', () => {
     describe('GET: Happy Paths', () => {
-        test.only('returns an array of articles', () => {
+        test('returns an array of articles', () => {
             return request(app)
             .get('/api/articles')
             .expect(200)
@@ -147,12 +147,60 @@ describe('/api/articles', () => {
             })
         })
 
-        test.only('returns an array of articles sorted by a query', () => {
+        test('returns an array of articles sorted by a query', () => {
             return request(app)
             .get('/api/articles?sort_by=article_id')
             .expect(200)
             .then((res) => {
-                expect(res.body.articles).toBeSortedBy('article_id')
+                expect(res.body.articles).toBeSortedBy('article_id', { descending: true })
+            })
+        })
+
+        test('returns an array of articles ordered by inputted query', () => {
+            return request(app)
+            .get('/api/articles?order=ASC')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSorted({ coerce: true} )
+            })
+        })
+
+        test('returns an array of articles filtered by inputted query', () => {
+            return request(app)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles.length).toBe(11)
+                expect(res.body.articles.every((article) => article.topic === "mitch")).toBe(true)
+
+            })
+        })
+    })
+    describe('GET: Error handling', () => {
+        test('400: invalid sort query', () => {
+            return request(app)
+            .get('/api/articles?sort_by=chicken')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Invalid sort query')
+            })
+        })
+
+        test('400: invalid order query', () => {
+            return request(app)
+            .get('/api/articles?order=invalid')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Invalid order query')
+            })
+        })
+
+        test('404: Invalid topic query', () => {
+            return request(app)
+            .get('/api/articles?topic=chickenburger')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Topic not found')
             })
         })
     })

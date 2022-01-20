@@ -1,4 +1,4 @@
-const { selectTopics, selectArticlesById, patchById, fetchArticles } = require('../models/app.models')
+const { selectTopics, selectArticlesById, patchById, fetchArticles, checkTopicExists } = require('../models/app.models')
 
 exports.getTopics = (req, res, next) => {
     selectTopics()
@@ -29,8 +29,16 @@ exports.updateArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) =>{
     const  { sort_by } = req.query
- fetchArticles(sort_by)
+    const { order } = req.query
+    const { topic } = req.query
+
+// checkTopicExists(topic)
+// .then((result) => {
+//     console.log (result, '<<<< controller')
+// })
+ fetchArticles(sort_by, order, topic)
  .then((articles) => {
      res.status(200).send({ articles })
  })
+ .catch(next)
 }

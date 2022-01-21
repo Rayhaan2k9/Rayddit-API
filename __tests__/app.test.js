@@ -206,7 +206,7 @@ describe('/api/articles', () => {
     })
 })
 
-describe.only('/api/articles/:article_id/comments', () => {
+describe('/api/articles/:article_id/comments', () => {
     describe('GET Happy paths', () => {
         test('returns an array of comments', () => {
             return request(app)
@@ -255,4 +255,77 @@ describe.only('/api/articles/:article_id/comments', () => {
             })
         })
     })
+    describe('POST: Happy path', () => {
+        test('201: returns posted comment', () => {
+            return request(app)
+            .post('/api/articles/8/comments')
+            .send({
+                username: "butter_bridge",
+                body: "When we going Phillies boys?"
+            })
+            .expect(201)
+            .then((res) => {
+                expect(res.body.newComment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String)
+                })
+            })
+        })
+    })
+    describe('POST: Error handling', () => {
+        test('400: Bad request when invalid article ID entered', () => {
+            return request(app)
+            .post('/api/articles/notanID/comments')
+            .send({
+                username: "butter_bridge",
+                body: "Hello!"
+            })
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Please enter a valid article_id')
+            })
+        })
+
+        test('400: Bad request when wrong datatype entered in post request', () => {
+            return request(app)
+            .post('/api/articles/8/comments')
+            .send({
+                username: 2222,
+                body: 2345
+            })
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Incorrect datatype for post request')
+            })
+        })
+        test('404: article does not exist, when article does not exists under specified id', () => {
+            return request(app)
+            .post('/api/articles/1234/comments')
+            .send({
+                username: "butter_bridge",
+                body: "Hello!"
+            })
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('No article found for article_id: 1234')
+            })
+        })
+
+        test('404: username does not exist, when username that is not in database is entered', () => {
+            return request(app)
+            .post('/api/articles/8/comments')
+            .send({
+                username: "Rayhaan2k9",
+                body: "Hello!"
+            })
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('username does not exist')
+            })
+        })
+    })
 })
+

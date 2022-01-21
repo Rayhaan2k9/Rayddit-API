@@ -137,3 +137,52 @@ exports.fetchCommentsByArticle = (article_id) => {
        return result.rows
     })
 }
+
+exports.postById = (article_id, username, body) => {
+    const regex = /\d/g
+    if(regex.test(article_id) === false) {
+        return Promise.reject({
+            status: 400, message: 'Please enter a valid article_id' 
+        })
+    }
+
+    if (typeof username !== 'string' ||typeof body !== 'string') {
+        return Promise.reject({
+            status: 400, message: 'Incorrect datatype for post request'
+        })
+    }
+    const usersList = []
+    return db.query(`SELECT username FROM users`)
+    .then((users) => {
+        users.rows.forEach((user) => {
+            usersList.push(user.username)
+        })
+        for (let i = 0; i < usersList.length; i++) {
+            if (username !== usersList[i]) {
+                return Promise.reject({
+                    status: 404, message: 'username does not exist'
+                })
+            }
+        }
+    })
+    .then(() => {
+        return db.query(`SELECT * FROM articles WHERE article_id = ${article_id}`)
+    .then((articles) => {
+        console.log(articles)
+        if (articles.rows.length === 0) {
+            return Promise.reject({
+                status: 404, message: `No article found for article_id: ${article_id}`
+            })
+        }
+    })
+    })
+    
+    .then(() => {
+        return db.query(`INSERT INTO comments (votes, author, body, article_id)
+    VALUES (0, $1, $2, $3) RETURNING comment_id, votes, created_at, author, body`, [username, body, article_id])
+    })
+    
+    .then((result) => {
+        return result.rows[0]
+    })
+}

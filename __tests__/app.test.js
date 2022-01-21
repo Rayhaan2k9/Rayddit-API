@@ -206,11 +206,11 @@ describe('/api/articles', () => {
     })
 })
 
-describe('/api/articles/:article_id/comments', () => {
-    describe('GET Happy path', () => {
-        test.only('returns an array of comments', () => {
+describe.only('/api/articles/:article_id/comments', () => {
+    describe('GET Happy paths', () => {
+        test('returns an array of comments', () => {
             return request(app)
-            .get('/api/articles/6/comments')
+            .get('/api/articles/8/comments')
             .expect(200)
             .then((res) => {
                expect(res.body.comments).toBeInstanceOf(Array)
@@ -225,9 +225,19 @@ describe('/api/articles/:article_id/comments', () => {
                })
             })
         })
+
+        test('returns an empty array if article exists but has no comments', () => {
+            return request(app)
+            .get('/api/articles/8/comments')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.comments).toBeInstanceOf(Array)
+            })
+
+        })
     })
     describe('GET: Error handling', () => {
-        test.only('400: Bad request', () => {
+        test('400: Bad request', () => {
             return request(app)
             .get("/api/articles/notAnId/comments")
             .expect(400)
@@ -236,7 +246,7 @@ describe('/api/articles/:article_id/comments', () => {
             })
         })
 
-        test.only('404: article not found', () => {
+        test('404: article not found', () => {
             return request(app)
             .get('/api/articles/99999/comments')
             .expect(404)

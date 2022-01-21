@@ -210,7 +210,7 @@ describe.only('/api/articles/:article_id/comments', () => {
     describe('GET Happy paths', () => {
         test('returns an array of comments', () => {
             return request(app)
-            .get('/api/articles/8/comments')
+            .get('/api/articles/1/comments')
             .expect(200)
             .then((res) => {
                expect(res.body.comments).toBeInstanceOf(Array)

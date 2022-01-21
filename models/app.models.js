@@ -106,11 +106,11 @@ exports.fetchCommentsByArticle = (article_id) => {
             status: 400, message: 'Bad request, please enter a valid number' 
         })
     }
-    const lengthArray = []
+    const noOfArticles = []
 
     return db.query(`SELECT articles.article_id FROM articles`)
     .then((result) => {
-        lengthArray.push(result.rows.length)
+        noOfArticles.push(result.rows.length)
         
     })
     .then(() => {
@@ -121,13 +121,13 @@ exports.fetchCommentsByArticle = (article_id) => {
     .then((result) => {
         
 
-        if(parseInt(article_id) <= lengthArray[0]) {
+        if(parseInt(article_id) <= noOfArticles[0]) {
             return Promise.resolve(result.rows)
         }
         
         
 
-        if(parseInt(article_id) > lengthArray[0]) {
+        if(parseInt(article_id) > noOfArticles[0]) {
             return Promise.reject({
                 status: 404,
                 message: `No article found for article_id: ${article_id}`

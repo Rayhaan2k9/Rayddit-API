@@ -100,9 +100,24 @@ if(!allowedOrders.includes(order)) {
 }
 
 exports.fetchCommentsByArticle = (article_id) => {
+    const regex = /\d/g
+    if(regex.test(article_id) === false) {
+        return Promise.reject({
+            status: 400, message: 'Bad request, please enter a valid number' 
+        })
+    }
+
     return db.query(`SELECT comments.comment_id, comments.votes, comments.created_at, users.username AS author, comments.body FROM comments INNER JOIN articles ON comments.article_id = articles.article_id INNER JOIN users ON comments.author = users.username
     WHERE articles.article_id = $1`, [article_id])
     .then((result) => {
-        return result.rows
+        const article = result.rows[0]
+        if(!article) {
+            return Promise.reject({
+                status: 404,
+                message: `No article found for article_id: ${article_id}`
+            })
+        }
+
+       return result.rows
     })
 }

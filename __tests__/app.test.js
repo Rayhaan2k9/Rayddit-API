@@ -207,7 +207,7 @@ describe('/api/articles', () => {
 })
 
 describe('/api/articles/:article_id/comments', () => {
-    describe('GET Happy paths', () => {
+    describe('GET Happy path', () => {
         test.only('returns an array of comments', () => {
             return request(app)
             .get('/api/articles/6/comments')
@@ -223,6 +223,25 @@ describe('/api/articles/:article_id/comments', () => {
                        body: expect.any(String)
                    })
                })
+            })
+        })
+    })
+    describe('GET: Error handling', () => {
+        test.only('400: Bad request', () => {
+            return request(app)
+            .get("/api/articles/notAnId/comments")
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Bad request, please enter a valid number' )
+            })
+        })
+
+        test.only('404: article not found', () => {
+            return request(app)
+            .get('/api/articles/99999/comments')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('No article found for article_id: 99999')
             })
         })
     })

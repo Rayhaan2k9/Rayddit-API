@@ -329,3 +329,16 @@ describe('/api/articles/:article_id/comments', () => {
     })
 })
 
+// describe('/api/comments/:comment_id', () => {
+//     describe('DELETE: Happy path', () => {
+//         test('status 204: deletes a comment by id', () => {
+//             return request(app)
+//             .delete('/api/comments/2')
+//             .expect(204)
+//             .then((res) => {
+
+//             })
+//         });
+//     });
+// });
+

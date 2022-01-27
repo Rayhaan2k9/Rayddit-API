@@ -157,13 +157,13 @@ exports.postById = (article_id, username, body) => {
         users.rows.forEach((user) => {
             usersList.push(user.username)
         })
-        for (let i = 0; i < usersList.length; i++) {
-            if (username !== usersList[i]) {
+        console.log(usersList)
+            if (!usersList.includes(username)) {
                 return Promise.reject({
                     status: 404, message: 'username does not exist'
                 })
             }
-        }
+        
     })
     .then(() => {
         return db.query(`SELECT * FROM articles WHERE article_id = ${article_id}`)

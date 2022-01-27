@@ -1,7 +1,7 @@
 const db = require('./db/connection');
 const express = require('express')
 const app = express();
-const { getTopics, getArticlesById, updateArticleById, getArticles, getCommentsByArticle, postComment } = require('./controllers/app.controller')
+const { getTopics, getArticlesById, updateArticleById, getArticles, getCommentsByArticle, postComment, deleteComment } = require('./controllers/app.controller')
 
 
 app.use(express.json());
@@ -17,6 +17,8 @@ app.get('/api/articles', getArticles)
 app.get('/api/articles/:article_id/comments', getCommentsByArticle);
 
 app.post('/api/articles/:article_id/comments', postComment)
+
+app.delete('/api/comments/:comment_id', deleteComment)
 
 app.all('*', (req, res) => {
  res.status(404).send({message: 'Not found!'})

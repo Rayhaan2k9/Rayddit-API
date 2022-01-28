@@ -66,4 +66,5 @@ deleteCommentById(comment_id)
 .then((result) => {
     res.status(204).send({})
 })
+.catch(next)
 }

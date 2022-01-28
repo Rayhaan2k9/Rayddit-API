@@ -329,12 +329,32 @@ describe('/api/articles/:article_id/comments', () => {
     })
 })
 
-describe('/api/comments/:comment_id', () => {
+describe.only('/api/comments/:comment_id', () => {
     describe('DELETE: Happy path', () => {
-        test.only('status 204: deletes a comment by id', () => {
+        test('status 204: deletes a comment by id', () => {
             return request(app)
             .delete('/api/comments/2')
             .expect(204)
+        });
+    });
+
+    describe('DELETE: Error handling', () => {
+        test('400: Bad request when invalid comment id entered', () => {
+            return request(app)
+            .delete('/api/comments/notAComment')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Please enter a valid comment_id')
+            })
+        });
+
+        test('404: comment does not exist under specified id when number is entered but no comment with that id', () => {
+            return request(app)
+            .delete('/api/comments/1000')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('No comment found for comment_id: 1000')
+            })
         });
     });
 });

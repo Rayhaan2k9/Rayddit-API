@@ -209,4 +209,11 @@ exports.deleteCommentById = (comment_id) => {
     }) 
 }
 
+exports.selectUsers = () => {
+    return db.query(`SELECT username FROM users`)
+    .then((users) => {
+        return users.rows
+    })
+}
+
 

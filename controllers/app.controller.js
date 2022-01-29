@@ -1,4 +1,4 @@
-const { selectTopics, selectArticlesById, patchById, fetchArticles, fetchCommentsByArticle, postById, deleteCommentById, fetchEndpoints } = require('../models/app.models')
+const { selectTopics, selectArticlesById, patchById, fetchArticles, fetchCommentsByArticle, postById, deleteCommentById, selectUsers } = require('../models/app.models')
 const endpoints = require('../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
@@ -72,4 +72,11 @@ deleteCommentById(comment_id)
 
 exports.getEndpointsJSON = (req, res, next) => {
     res.status(200).send(endpoints)
+}
+
+exports.getUsers = (req, res, next) => {
+    selectUsers()
+    .then((users) => {
+        res.status(200).send ({ users })
+    })
 }

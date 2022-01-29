@@ -16,7 +16,7 @@ describe('/api/invalid_endpoint', () => {
         .get('/api/invalid_endpoint')
         .expect(404)
         .then((res) => {
-            expect(res.body.message).toBe('Not found!')
+            expect(res.body.message).toBe('404: Not found, Please check URL!')
         })
     })
 })
@@ -360,7 +360,7 @@ describe('/api/comments/:comment_id', () => {
     });
 });
 
-describe.only('/api', () => {
+describe('/api', () => {
     describe('GET Happy path', () => {
         test('returns a JSON describing available endpoints on api', () => {
             return request(app)
@@ -372,5 +372,34 @@ describe.only('/api', () => {
         });
     });
     
+});
+
+describe('/api/users', () => {
+    describe('GET: Happy path', () => {
+        test('Returns an array of objects containing a single key, username', () => {
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.users).toBeInstanceOf(Array)
+                res.body.users.forEach((user) => {
+                    expect(user).toMatchObject({
+                       username: expect.any(String) 
+                    })
+                })
+            })
+        });
+    });
+
+    describe('GET: Error handling', () => {
+        test('404: Not found when invalid URL entered', () => {
+            return request(app)
+            .get('/api/user')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('404: Not found, Please check URL!')
+            })
+        });
+    });
 });
 

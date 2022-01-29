@@ -403,3 +403,20 @@ describe('/api/users', () => {
     });
 });
 
+describe.only('/api/users/:username', () => {
+    describe('GET: Happy path', () => {
+        test('returns specified username object', () => {
+            return request(app)
+            .get('/api/users/butter_bridge')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.user).toEqual({
+                    username: "butter_bridge",
+                    avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+                    name: "jonny"
+                })
+            })
+        });
+    });
+});
+

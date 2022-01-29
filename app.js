@@ -1,7 +1,7 @@
 const db = require('./db/connection');
 const express = require('express')
 const app = express();
-const { getTopics, getArticlesById, updateArticleById, getArticles, getCommentsByArticle, postComment, deleteComment, getEndpointsJSON, getUsers } = require('./controllers/app.controller')
+const { getTopics, getArticlesById, updateArticleById, getArticles, getCommentsByArticle, postComment, deleteComment, getEndpointsJSON, getUsers, getUserByUsername } = require('./controllers/app.controller')
 
 
 app.use(express.json());
@@ -23,6 +23,8 @@ app.delete('/api/comments/:comment_id', deleteComment)
 app.get('/api', getEndpointsJSON)
 
 app.get('/api/users', getUsers)
+
+app.get('/api/users/:username', getUserByUsername)
 
 app.all('*', (req, res) => {
  res.status(404).send({message: '404: Not found, Please check URL!'})

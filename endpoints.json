@@ -23,5 +23,21 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an object with information about specified article",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "author": "tickle122",
+        "title": "The battle for Node.js security has only begun",
+        "article_id": 12,
+        "body": "Article text..",
+        "votes": 0,
+        "comment_count": 7
+      }
+    }
   }
+
+  
 }

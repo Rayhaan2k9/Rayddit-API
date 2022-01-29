@@ -4,6 +4,7 @@ const seed  = require('../db/seeds/seed.js');
 const app = require('../app')
 const request = require('supertest');
 const { response } = require('../app');
+const endpoints = require('../endpoints.json')
 
 
 beforeEach(() => seed(testData));
@@ -329,7 +330,7 @@ describe('/api/articles/:article_id/comments', () => {
     })
 })
 
-describe.only('/api/comments/:comment_id', () => {
+describe('/api/comments/:comment_id', () => {
     describe('DELETE: Happy path', () => {
         test('status 204: deletes a comment by id', () => {
             return request(app)
@@ -357,5 +358,19 @@ describe.only('/api/comments/:comment_id', () => {
             })
         });
     });
+});
+
+describe.only('/api', () => {
+    describe('GET Happy path', () => {
+        test('returns a JSON describing available endpoints on api', () => {
+            return request(app)
+            .get('/api')
+            .expect(200)
+            .then((res) => {
+                expect(res.body).toEqual(endpoints)
+            })
+        });
+    });
+    
 });
 

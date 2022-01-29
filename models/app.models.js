@@ -1,5 +1,6 @@
 const { query } = require('../db/connection')
 const db = require('../db/connection')
+const endpoints = require('../endpoints.json')
 
 exports.selectTopics = () => {
     return db.query('SELECT * FROM topics')
@@ -205,9 +206,7 @@ exports.deleteCommentById = (comment_id) => {
     })
     .then(() => {
         return db.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id])
-    })
-        
-    
-
-    
+    }) 
 }
+
+

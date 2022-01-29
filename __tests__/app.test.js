@@ -324,7 +324,7 @@ describe('/api/articles/:article_id/comments', () => {
             })
             .expect(404)
             .then((res) => {
-                expect(res.body.message).toBe('username does not exist')
+                expect(res.body.message).toBe('User does not exist')
             })
         })
     })
@@ -403,7 +403,7 @@ describe('/api/users', () => {
     });
 });
 
-describe.only('/api/users/:username', () => {
+describe('/api/users/:username', () => {
     describe('GET: Happy path', () => {
         test('returns specified username object', () => {
             return request(app)
@@ -415,6 +415,17 @@ describe.only('/api/users/:username', () => {
                     avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
                     name: "jonny"
                 })
+            })
+        });
+    });
+
+    describe('GET: Error handling', () => {
+        test('Status 404: When username that does not exist is entered', () => {
+            return request(app)
+            .get('/api/users/Rayhaan2k9')
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe("User does not exist")
             })
         });
     });

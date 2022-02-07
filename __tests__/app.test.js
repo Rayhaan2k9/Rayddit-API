@@ -22,7 +22,7 @@ describe('/api/invalid_endpoint', () => {
 })
 
 describe('/api/topics', () => {
-    test('200: responds with array of topics', () => {
+    test(' GET 200: responds with array of topics', () => {
         return request(app)
         .get('/api/topics')
         .expect(200)
@@ -36,7 +36,20 @@ describe('/api/topics', () => {
             })
         })
     })
-    
+    // describe('POST happy path', () => {
+    //     test('201 = returns posted topic', () => {
+    //       return request(app)
+    //       .post('/api/topics')
+    //       .send({
+    //           slug: "Gaming",
+    //           description: "No console wars here!"
+    //       })
+    //       .expect(201)
+    //       .then((res) => {
+
+    //       })
+    //     });
+    // });
 })
 
 describe('/api/articles/:article_id', () => {

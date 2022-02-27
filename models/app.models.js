@@ -148,7 +148,6 @@ exports.fetchCommentsByArticle = (article_id) => {
           message: `No article found for article_id: ${article_id}`,
         });
       }
-
       return result.rows;
     });
 };

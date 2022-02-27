@@ -36,20 +36,6 @@ describe('/api/topics', () => {
             })
         })
     })
-    // describe('POST happy path', () => {
-    //     test('201 = returns posted topic', () => {
-    //       return request(app)
-    //       .post('/api/topics')
-    //       .send({
-    //           slug: "Gaming",
-    //           description: "No console wars here!"
-    //       })
-    //       .expect(201)
-    //       .then((res) => {
-
-    //       })
-    //     });
-    // });
 })
 
 describe('/api/articles/:article_id', () => {
@@ -59,15 +45,15 @@ describe('/api/articles/:article_id', () => {
             .get('/api/articles/5')
             .expect(200)
             .then((res) => {
-                expect(res.body.article).toMatchObject({
-                    author: expect.any(String),
-                    title: expect.any(String),
-                    article_id: expect.any(Number),
-                    body: expect.any(String),
-                    topic: expect.any(String),
-                    created_at: expect.any(String),
-                    votes: expect.any(Number),
-                    comment_count: expect.any(Number)
+                expect(res.body.article).toEqual({
+                author: 'rogersop',
+                title: 'UNCOVERED: catspiracy to bring down democracy',
+                article_id: 5,
+                 body: 'Bastet walks amongst us, and the cats are taking arms!',
+                 topic: 'cats',
+                 created_at: '2020-08-03T13:14:00.000Z',
+                 votes: 0,
+                 comment_count: 2
                 })
             })
         })

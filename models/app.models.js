@@ -20,7 +20,6 @@ exports.selectArticlesById = (id) => {
     )
     .then((result) => {
       const article = result.rows[0];
-      console.log(article)
       if (!article) {
         return Promise.reject({
           status: 404,
@@ -100,6 +99,7 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
     ORDER BY ${sort_by} ${order}`
       )
       .then((result) => {
+        console.log(result.rows)
         return result.rows;
       });
   }

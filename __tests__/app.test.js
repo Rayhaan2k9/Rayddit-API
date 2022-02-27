@@ -28,6 +28,7 @@ describe('/api/topics', () => {
         .expect(200)
         .then((res) => {
             expect(res.body.topics).toBeInstanceOf(Array);
+            expect(res.body.topics.length).toBe(3)
             res.body.topics.forEach((topic) => {
                 expect(topic).toMatchObject({
                     slug: expect.any(String),
@@ -79,13 +80,13 @@ describe('/api/articles/:article_id', () => {
         })
     })
     describe('PATCH: Happy path', () => {
-        test('Status 201 and updates specified object', () => {
+        test.only('Status 200 and updates specified object', () => {
             return request(app)
             .patch('/api/articles/1')
             .send({
                 inc_votes: 3
             })
-            .expect(201)
+            .expect(200)
             .then((res) => {
                 expect(res.body.article).toEqual({
                     article_id: 1,
@@ -152,6 +153,7 @@ describe('/api/articles', () => {
             .expect(200)
             .then((res) => {
                 expect(res.body.articles).toBeInstanceOf(Array);
+                expect(res.body.articles.length).toBe(12);
                 res.body.articles.forEach((article) => {
                     expect(article).toMatchObject({
                         author: expect.any(String),

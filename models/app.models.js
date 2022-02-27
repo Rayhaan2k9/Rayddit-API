@@ -65,7 +65,7 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
     "comment_count",
   ];
 
-  const allowedOrders = ["ASC", "DESC"];
+  const allowedOrders = ["ASC", "asc", "DESC", "desc"];
 
   if (!allowedSortBys.includes(sort_by)) {
     return Promise.reject({ status: 400, message: "Invalid sort query" });

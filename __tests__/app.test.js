@@ -187,9 +187,9 @@ describe('/api/articles', () => {
             })
         })
 
-        test('returns an array of articles ordered by inputted query', () => {
+        test.only('returns an array of articles ordered by inputted query', () => {
             return request(app)
-            .get('/api/articles?order=ASC')
+            .get('/api/articles?order=asc')
             .expect(200)
             .then((res) => {
                 expect(res.body.articles).toBeSorted({ coerce: true} )

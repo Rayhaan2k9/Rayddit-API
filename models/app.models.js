@@ -67,6 +67,8 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
 
   const allowedOrders = ["ASC", "asc", "DESC", "desc"];
 
+  const topicsList = []
+
   if (!allowedSortBys.includes(sort_by)) {
     return Promise.reject({ status: 400, message: "Invalid sort query" });
   }
@@ -75,7 +77,12 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
     return Promise.reject({ status: 400, message: "Invalid order query" });
   }
 
-  let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
+  return db.query(`SELECT topics.slug FROM topics`)
+  .then((topics) => {
+    topics.rows.forEach(topic => topicsList.push(topic.slug))
+  })
+  .then(() => {
+    let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
     LEFT JOIN comments 
     ON articles.article_id = comments.article_id`;
 
@@ -83,7 +90,7 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
     queryStr += ` WHERE articles.topic = $1 GROUP BY articles.article_id
         ORDER BY ${sort_by} ${order}`;
     return db.query(queryStr, [topic]).then((result) => {
-      if (result.rows.length === 0) {
+      if (result.rows.length === 0 && !topicsList.includes(topic)) {
         return Promise.reject({ status: 404, message: "Topic not found" });
       }
       return result.rows;
@@ -101,6 +108,10 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
         return result.rows;
       });
   }
+  })
+  
+
+  
 };
 
 exports.fetchCommentsByArticle = (article_id) => {

@@ -187,7 +187,7 @@ describe('/api/articles', () => {
             })
         })
 
-        test.only('returns an array of articles ordered by inputted query', () => {
+        test('returns an array of articles ordered by inputted query', () => {
             return request(app)
             .get('/api/articles?order=asc')
             .expect(200)
@@ -206,6 +206,15 @@ describe('/api/articles', () => {
 
             })
         })
+
+        test('returns an empty array with valid topic query which has no articles', () => {
+            return request(app)
+            .get('/api/articles?topic=paper')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles.length).toBe(0)
+            })
+        });
     })
     describe('GET: Error handling', () => {
         test('400: invalid sort query', () => {

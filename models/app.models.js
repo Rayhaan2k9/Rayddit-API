@@ -59,7 +59,6 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
     "author",
     "title",
     "article_id",
-    "body",
     "topic",
     "created_at",
     "votes",
@@ -76,7 +75,7 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
     return Promise.reject({ status: 400, message: "Invalid order query" });
   }
 
-  let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
+  let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
     LEFT JOIN comments 
     ON articles.article_id = comments.article_id`;
 
@@ -92,14 +91,13 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", topic) => {
   } else {
     return db
       .query(
-        `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
+        `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
     LEFT JOIN comments 
     ON articles.article_id = comments.article_id
     GROUP BY articles.article_id
     ORDER BY ${sort_by} ${order}`
       )
       .then((result) => {
-        console.log(result.rows)
         return result.rows;
       });
   }

@@ -1,4 +1,4 @@
-# Northcoders News API
+# Rayddit API
 
 ## Background
 

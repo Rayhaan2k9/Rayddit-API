@@ -389,7 +389,7 @@ describe('/api', () => {
 
 describe('/api/users', () => {
     describe('GET: Happy path', () => {
-        test('Returns an array of objects containing a single key, username', () => {
+        test('Returns an array of objects containing a data of users', () => {
             return request(app)
             .get('/api/users')
             .expect(200)
@@ -397,7 +397,9 @@ describe('/api/users', () => {
                 expect(res.body.users).toBeInstanceOf(Array)
                 res.body.users.forEach((user) => {
                     expect(user).toMatchObject({
-                       username: expect.any(String) 
+                       username: expect.any(String), 
+                       avatar_url: expect.any(String),
+                       name: expect.any(String)
                     })
                 })
             })

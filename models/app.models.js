@@ -158,7 +158,6 @@ exports.postById = (article_id, username, body) => {
       users.rows.forEach((user) => {
         usersList.push(user.username);
       });
-      console.log(usersList);
       if (!usersList.includes(username)) {
         return Promise.reject({
           status: 404,
@@ -170,7 +169,6 @@ exports.postById = (article_id, username, body) => {
       return db
         .query(`SELECT * FROM articles WHERE article_id = ${article_id}`)
         .then((articles) => {
-          console.log(articles);
           if (articles.rows.length === 0) {
             return Promise.reject({
               status: 404,

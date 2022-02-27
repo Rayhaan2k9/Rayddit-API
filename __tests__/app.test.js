@@ -109,6 +109,27 @@ describe('/api/articles/:article_id', () => {
                 expect(res.body.message).toBe("Bad Request")
             })
         })
+
+        test('400: Bad request when invalid article id entered', () => {
+            return request(app)
+            .patch('/api/articles/notAnId')
+            .send({
+                inc_votes: 1
+            })
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Bad Request')
+            })
+        });
+
+        test('404: Not Found', () => {
+            return request(app)
+            .get("/api/articles/999999")
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe("No article found for article_id: 999999")
+            })
+        })
         
         test('400: Bad request when incorrect data type entered', () => {
             return request(app)

@@ -80,7 +80,7 @@ describe('/api/articles/:article_id', () => {
         })
     })
     describe('PATCH: Happy path', () => {
-        test.only('Status 200 and updates specified object', () => {
+        test('Status 200 and updates specified object', () => {
             return request(app)
             .patch('/api/articles/1')
             .send({
@@ -159,7 +159,6 @@ describe('/api/articles', () => {
                         author: expect.any(String),
                         title: expect.any(String),
                         article_id: expect.any(Number),
-                        body: expect.any(String),
                         topic: expect.any(String),
                         created_at: expect.any(String),
                         votes: expect.any(Number),
@@ -169,6 +168,15 @@ describe('/api/articles', () => {
 
             })
         })
+
+        test('returns an array of articles sorted by created_at and ordered by DESC by default', () => {
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then((res) => {
+                expect(res.body.articles).toBeSortedBy('created_at', { descending: true })
+            })
+        });
 
         test('returns an array of articles sorted by a query', () => {
             return request(app)

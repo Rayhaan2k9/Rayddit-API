@@ -20,12 +20,13 @@ exports.selectArticlesById = (id) => {
     )
     .then((result) => {
       const article = result.rows[0];
+      console.log(article)
       if (!article) {
         return Promise.reject({
           status: 404,
           message: `No article found for article_id: ${id}`,
         });
-      }
+      } 
       return article;
     });
 };
@@ -37,7 +38,14 @@ exports.patchById = (id, votes) => {
       [votes, id]
     )
     .then((result) => {
-      return result.rows[0];
+      const article = result.rows[0];
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          message: `No article found for article_id: ${id}`,
+        });
+      } 
+      return article;
     });
 };
 exports.checkTopicExists = (topic) => {

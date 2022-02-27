@@ -162,10 +162,10 @@ exports.postById = (article_id, username, body) => {
     });
   }
 
-  if (typeof username !== "string" || typeof body !== "string") {
+  if (!username || !body) {
     return Promise.reject({
       status: 400,
-      message: "Incorrect datatype for post request",
+      message: "Missing required field(s)",
     });
   }
   const usersList = [];

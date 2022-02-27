@@ -253,7 +253,8 @@ describe('/api/articles/:article_id/comments', () => {
             .get('/api/articles/1/comments')
             .expect(200)
             .then((res) => {
-               expect(res.body.comments).toBeInstanceOf(Array)
+               expect(res.body.comments).toBeInstanceOf(Array);
+               expect(res.body.comments.length).toBe(11)
                res.body.comments.forEach((comment) => {
                    expect(comment).toMatchObject({
                        comment_id: expect.any(Number),
@@ -329,16 +330,16 @@ describe('/api/articles/:article_id/comments', () => {
             })
         })
 
-        test('400: Bad request when wrong datatype entered in post request', () => {
+        test('400: Bad request when a single/all required fields are empty', () => {
             return request(app)
             .post('/api/articles/8/comments')
             .send({
-                username: 2222,
-                body: 2345
+                username: "butter_bridge",
+                body : null
             })
             .expect(400)
             .then((res) => {
-                expect(res.body.message).toBe('Incorrect datatype for post request')
+                expect(res.body.message).toBe("Missing required field(s)")
             })
         })
         test('404: article does not exist, when article does not exists under specified id', () => {

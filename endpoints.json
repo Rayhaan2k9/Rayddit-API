@@ -78,10 +78,50 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds a comment to the list associated with the specified article",
+    "queries": [],
+    "exampleInput": {
+      "username": "jessjelly",
+      "body": "I love this site!"
+    },
+    "exampleResponse": {
+      "comment":
+        {
+          "comment_id": 15,
+          "votes": 0,
+          "created_at": "2020-07-08T23:00:00.000Z",
+          "author": "jessjelly",
+          "body": "I love this site!"
+        }
+    }
+  },
+  "DELETE /api/comments/comment_id": {
+    "description": "Deletes the specified comment from the database",
+    "queries": [],
+    "exampleResponse": {}
+  },
+  "GET /api/users": {
+    "description": "Retrieves a list of users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "rogersop",
+          "name": "paul",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+        }
+      ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "Retrieves an individual user object from the database",
+    "queries": [],
+    "exampleResponse": {
+      "username": "jessjelly",
+      "avatar_url": "image-url",
+      "name": "do_nothing"
+    }
   }
-  
-  
-
-
-  
 }

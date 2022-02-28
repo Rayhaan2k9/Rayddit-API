@@ -50,13 +50,6 @@ $ npm run dev
 ### `GET /api/`
 - Retrieves a JSON object of available endpoints in the API
 
-### `GET /api/users/`
-- Retrieves a list of users
-
-### `GET /api/users/:username`
-- Retrieves an individual user from the database
-- `:username` must be valid and exist
-
 ### `GET /api/topics`
 - Retrieves a list of topics
 
@@ -89,6 +82,7 @@ $ npm run dev
 
 ### `GET /api/users/:username`
 - Retrieves an individual user object `
+- `:username` must be valid and exist
 - Example response body:
 ```
 {

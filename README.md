@@ -14,6 +14,7 @@ Written by [Rayhaan Ugharadar](github.com/Rayhaan2k9). Latest version 1.0.0 (27 
 ```
 $ npm i
 $ npm i -D jest
+$ npm i -D jest-sorted
 ```
 At a minimum, [Node.js 17.0.1](https://nodejs.org/en/download/) and [Postgres 8.7.1](https://www.postgresql.org/download/) are required. Postgres will be installed with the command above.
 

@@ -1,35 +1,36 @@
 const db = require("../connection");
 const allData = require("../data/test-data/index");
-const format = require('pg-format');
+const format = require("pg-format");
 
 const seed = (data) => {
   const { articleData, commentData, topicData, userData } = data;
 
-  return db.query(`DROP TABLE IF EXISTS comments`)
-  .then(() => {
-    return db.query(`DROP TABLE IF EXISTS articles`)
-  })
-  .then(() => {
-    return db.query(`DROP TABLE IF EXISTS users`)
-  })
-  .then(() => {
-    return db.query(`DROP TABLE IF EXISTS topics`)
-  })
-  .then(() => {
-    return db.query(`CREATE TABLE topics (
+  return db
+    .query(`DROP TABLE IF EXISTS comments`)
+    .then(() => {
+      return db.query(`DROP TABLE IF EXISTS articles`);
+    })
+    .then(() => {
+      return db.query(`DROP TABLE IF EXISTS users`);
+    })
+    .then(() => {
+      return db.query(`DROP TABLE IF EXISTS topics`);
+    })
+    .then(() => {
+      return db.query(`CREATE TABLE topics (
       slug TEXT UNIQUE NOT NULL PRIMARY KEY,
       description VARCHAR(100)
     );`);
-  })
-  .then(() => {
-    return db.query(`CREATE TABLE users (
+    })
+    .then(() => {
+      return db.query(`CREATE TABLE users (
       username TEXT UNIQUE NOT NULL PRIMARY KEY,
       avatar_url TEXT NOT NULL,
       name VARCHAR(50)
-    );`)
-  })
-  .then(() => {
-    return db.query(`CREATE TABLE articles (
+    );`);
+    })
+    .then(() => {
+      return db.query(`CREATE TABLE articles (
       article_id SERIAL PRIMARY KEY,
       title VARCHAR(200) NOT NULL,
       body TEXT NOT NULL,
@@ -39,48 +40,62 @@ const seed = (data) => {
       author TEXT,
       FOREIGN KEY (author) REFERENCES users(username),
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );`)
-  })
-  .then(() => {
-    return db.query(`CREATE TABLE comments (
+    );`);
+    })
+    .then(() => {
+      return db.query(`CREATE TABLE comments (
       comment_id SERIAL PRIMARY KEY,
       author TEXT,
       FOREIGN KEY (author) REFERENCES users(username),
       article_id INT,
       FOREIGN KEY (article_id) REFERENCES articles(article_id),
       votes INT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
       body TEXT NOT NULL
-    );`)
-  })
-  .then((result) => {
-    const formattedTopics = topicData.map((topic) => {
-      return [topic.slug, topic.description]
+    );`);
     })
-    const insertTopics = format(`INSERT INTO topics (
+    .then((result) => {
+      const formattedTopics = topicData.map((topic) => {
+        return [topic.slug, topic.description];
+      });
+      const insertTopics = format(
+        `INSERT INTO topics (
       slug,
       description
     )
-    VALUES %L RETURNING *`, formattedTopics);
-    return db.query(insertTopics)
-  })
-  .then(() => {
-    const formattedUsers = userData.map((user) => {
-      return [user.username, user.avatar_url, user.name]
+    VALUES %L RETURNING *`,
+        formattedTopics
+      );
+      return db.query(insertTopics);
     })
-    const insertUsers = format(`INSERT INTO users (
+    .then(() => {
+      const formattedUsers = userData.map((user) => {
+        return [user.username, user.avatar_url, user.name];
+      });
+      const insertUsers = format(
+        `INSERT INTO users (
       username,
       avatar_url,
       name
     )
-    VALUES %L RETURNING *`, formattedUsers);
-    return db.query(insertUsers);
-  })
-  .then(() => {
-    const formattedArticles = articleData.map((article) => {
-      return [article.title, article.body,article.votes, article.topic, article.author, article.created_at]
+    VALUES %L RETURNING *`,
+        formattedUsers
+      );
+      return db.query(insertUsers);
     })
-    const insertArticles = format(`INSERT INTO articles (
+    .then(() => {
+      const formattedArticles = articleData.map((article) => {
+        return [
+          article.title,
+          article.body,
+          article.votes,
+          article.topic,
+          article.author,
+          article.created_at,
+        ];
+      });
+      const insertArticles = format(
+        `INSERT INTO articles (
       title,
       body,
       votes,
@@ -88,24 +103,34 @@ const seed = (data) => {
       author,
       created_at
       )
-      VALUES %L RETURNING *`, formattedArticles);
-      return db.query(insertArticles)
-  })
-  .then(() => {
-    const formattedComments = commentData.map((comment) => {
-      return [comment.author, comment.article_id, comment.votes, comment.created_at, comment.body]
+      VALUES %L RETURNING *`,
+        formattedArticles
+      );
+      return db.query(insertArticles);
     })
-    const insertComment = format(`INSERT INTO comments (
+    .then(() => {
+      const formattedComments = commentData.map((comment) => {
+        return [
+          comment.author,
+          comment.article_id,
+          comment.votes,
+          comment.created_at,
+          comment.body,
+        ];
+      });
+      const insertComment = format(
+        `INSERT INTO comments (
       author,
       article_id,
       votes,
       created_at,
       body
     )
-    VALUES %L RETURNING *`, formattedComments);
-    return db.query(insertComment)
-
-  })
+    VALUES %L RETURNING *`,
+        formattedComments
+      );
+      return db.query(insertComment);
+    });
 };
 
 module.exports = seed;
